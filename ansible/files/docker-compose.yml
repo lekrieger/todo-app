@@ -2,7 +2,7 @@ version: '3'
 
 services:
   mongodb:
-    image: mongo:4.4.6
+    image: docker.io/mongo:4.4.6
     container_name: mongodb_container
     restart: always
     environment:
