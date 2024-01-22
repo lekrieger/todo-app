@@ -1,0 +1,100 @@
+---
+- name: Konfiguration des Zielsystems
+  hosts: 127.0.0.1
+  connection: local
+  become: yes
+
+  tasks:
+    - name: update all packages to the latest versions
+      ansible.builtin.apt:
+        name: "*"
+        state: latest
+
+    - name: Install apt packages
+      apt:
+        name: 
+          - git
+          - docker.io
+          - docker-compose
+          - nodejs          
+        state: present
+
+    - name: Install node.js / npm packages
+      community.general.npm:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - npm
+        - cors@2.8.5
+        - express@4.18.2
+        - mongoose@8.0.2
+
+    - name: Erstelle git
+      file:
+        path: /home/git
+        state: directory
+
+    - name: Erstelle todo-Ordner
+      file:
+        path: /home/git/todo-app
+        state: directory
+
+    - name: Erstelle backend-Ordner
+      file:
+        path: /home/git/todo-app/backend
+        state: directory
+
+    - name: Erstelle frontend-Ordner
+      file:
+        path: /home/git/todo-app/frontend
+        state: directory
+
+    - name: Erstelle mongodb-Ordner
+      file:
+        path: /home/git/todo-app/mongodb
+        state: directory        
+
+    - name: Upload docker-compose file
+      copy:
+        src: files/docker-compose.yml
+        dest: /home/git/todo-app/mongodb/docker-compose.yml
+
+    - name: Upload init-mongo file
+      copy:
+        src: files/init-mongo.js
+        dest: /home/git/todo-app/mongodb/init-mongo.js
+
+    - name: Upload index.html file
+      copy:
+        src: files/index.html
+        dest: /var/www/html/index.html
+
+    - name: Upload dockerfile
+      copy:
+        src: files/dockerfile.txt
+        dest: /home/git/todo-app/Dockerfile
+
+    - name: Upload server.js file
+      copy:
+        src: files/backend
+        dest: /home/git/todo-app/backend/server.js
+
+    - name: Run `docker-compose up` for the mongodb 
+      community.docker.docker_compose:
+        project_src: /home/git/todo-app/mongodb
+
+    - name: Create apache container
+      community.docker.docker_image:
+        build:
+          path: /home/git/todo-app
+        name: apache_container
+        tag: latest
+
+    - name: run apache container
+      docker_container:
+        name: apache_container
+        image: apache
+
+
+
+    
