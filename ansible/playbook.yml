@@ -16,13 +16,13 @@
           - git
           - docker.io
           - docker-compose
-          - nodejs          
+          - nodejs       
+          - npm
         state: present
 
     - name: Install node.js / npm packages
       community.general.npm:
         name:
-          - npm
           - cors@2.8.5
           - express@4.18.2
           - mongoose@8.0.2
