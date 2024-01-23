@@ -21,13 +21,12 @@
 
     - name: Install node.js / npm packages
       community.general.npm:
-        name: "{{ item }}"
+        name:
+          - npm
+          - cors@2.8.5
+          - express@4.18.2
+          - mongoose@8.0.2
         state: present
-      loop:
-        - npm
-        - cors@2.8.5
-        - express@4.18.2
-        - mongoose@8.0.2
 
     - name: Erstelle git
       file:
