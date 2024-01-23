@@ -1,7 +1,6 @@
 ---
 - name: Konfiguration des Zielsystems
-  hosts: 127.0.0.1
-  connection: local
+  hosts: ansible_host
   become: yes
 
   tasks:
@@ -16,68 +15,40 @@
           - git
           - docker.io
           - docker-compose
-          - nodejs          
+          - nodejs
+          - npm          
         state: present
 
     - name: Install node.js / npm packages
       community.general.npm:
-        name: "{{ item }}"
+        name:
+          - cors@2.8.5
+          - express@4.18.2
+          - mongoose@8.0.2
         state: present
-      loop:
-        - npm
-        - cors@2.8.5
-        - express@4.18.2
-        - mongoose@8.0.2
+        global: yes
 
-    - name: Erstelle git
-      file:
-        path: /home/git
-        state: directory
+    - name: Clone the project repository
+      git:
+        repo: 'git@github.com:lekrieger/todo-app.git'
+        dest: /home/leon/todo-app
+        clone: yes
+        update: yes
+      become: no
+      become_user: leon
 
-    - name: Erstelle todo-Ordner
-      file:
-        path: /home/git/todo-app
-        state: directory
-
-    - name: Erstelle backend-Ordner
-      file:
-        path: /home/git/todo-app/backend
-        state: directory
-
-    - name: Erstelle frontend-Ordner
-      file:
-        path: /home/git/todo-app/frontend
-        state: directory
-
-    - name: Erstelle mongodb-Ordner
-      file:
-        path: /home/git/todo-app/mongodb
-        state: directory        
-
-    - name: Upload docker-compose file
+    - name: Copy Index.html to Apache directory
       copy:
-        src: files/docker-compose.yml
-        dest: /home/git/todo-app/mongodb/docker-compose.yml
-
-    - name: Upload init-mongo file
-      copy:
-        src: files/init-mongo.js
-        dest: /home/git/todo-app/mongodb/init-mongo.js
-
-    - name: Upload index.html file
-      copy:
-        src: files/index.html
+        src: /home/leon/todo-app/frontend/index.html
         dest: /var/www/html/index.html
 
-    - name: Upload dockerfile
+    - name: Configure SSH
       copy:
-        src: files/dockerfile.txt
-        dest: /home/git/todo-app/Dockerfile
-
-    - name: Upload server.js file
-      copy:
-        src: files/backend
-        dest: /home/git/todo-app/backend/server.js
+        src: /home/leon/todo-app/config
+        dest: /home/leon/.ssh/config
+        owner: leon
+        group: leon
+        mode: '0644'
 
     - name: Run `docker-compose up` for the mongodb 
       community.docker.docker_compose:
@@ -94,7 +65,3 @@
       docker_container:
         name: apache_container
         image: apache
-
-
-
-    
