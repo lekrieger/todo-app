@@ -15,45 +15,29 @@
           - git
           - docker.io
           - docker-compose
-          - nodejs          
+          - nodejs
+          - npm          
         state: present
 
     - name: Install node.js / npm packages
       community.general.npm:
-        name: "{{ item }}"
+        name:    
+          - cors@2.8.5
+          - express@4.18.2
+          - mongoose@8.0.2
         state: present
-      loop:
-        - npm
-        - cors@2.8.5
-        - express@4.18.2
-        - mongoose@8.0.2
+        global: yes
 
-    - name: Erstelle git
-      file:
-        path: /home/git
-        state: directory
+    - name: Clone the project repository
+      git:
+        repo: 'git@github.com:lekrieger/todo-app.git'
+        dest: /home/leon/todo-app
+        clone: yes
+        update: yes
+      become: no
+      become_user: leon
 
-    - name: Erstelle todo-Ordner
-      file:
-        path: /home/git/todo-app
-        state: directory
-
-    - name: Erstelle backend-Ordner
-      file:
-        path: /home/git/todo-app/backend
-        state: directory
-
-    - name: Erstelle frontend-Ordner
-      file:
-        path: /home/git/todo-app/frontend
-        state: directory
-
-    - name: Erstelle mongodb-Ordner
-      file:
-        path: /home/git/todo-app/mongodb
-        state: directory        
-
-    - name: Upload docker-compose file
+    - name: Upload index.html file
       copy:
         src: /home/leon/todo-app/frontend/index.html
         dest: /var/www/html/index.html
