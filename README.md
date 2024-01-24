@@ -1,7 +1,6 @@
-IP Adressen muessen jedes mal in folgenden Dateien angepasst werden:
+IP Adresse muss jedes mal in folgender Dateien angepasst werden:
 
-1) in der inventory.yml file
-2) in der index.html file
+in der index.html file
 
 
 Alternativ statische IP Konfiguration:
