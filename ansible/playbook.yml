@@ -60,6 +60,8 @@
           path: /home/git/todo-app
         name: apache_container
         tag: latest
+        state: started
+        restart_policy: always
 
     - name: run apache container
       docker_container:
