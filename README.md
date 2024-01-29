@@ -1,12 +1,11 @@
-IP Adresse muss jedes mal in folgender Dateien angepasst werden:
-
-in der index.html file
+IP Adresse wird im playbook normalerweise automatisch erkannt und in der index.html in /var/www/html ersetzt, aber falls nicht, muss die IP Adresse angepasst werden.
 
 
-Alternativ statische IP Konfiguration:
+Alternativ statische IP Konfiguration auf dem Server:
 
-cd /etc/network/
-sudo nano interfaces
+Pfad: cd /etc/network/
+shell: sudo nano interfaces
+
 Code:
 ----------------------------------------------
 # The loopback network interface
