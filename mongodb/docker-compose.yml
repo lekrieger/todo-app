@@ -12,6 +12,6 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - /home/leon/todo-app/mongodb:/data/db
-      - /home/leon/todo-app/mongodb/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - /home/leonserver/todo-app/mongodb:/data/db
+      - /home/leonserver/todo-app/mongodb/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
 
